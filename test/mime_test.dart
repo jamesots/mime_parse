@@ -31,8 +31,8 @@ var mime16 = 'a/b;q="x=y"';
 
 
 main() {
-  group("mime", () {
-    test("split really simple one", () {
+  group("parse", () {
+    test("really simple", () {
       var mimes = parse(mime1);
       expect(mimes, isList);
       expect(mimes, hasLength(1));
@@ -40,7 +40,7 @@ main() {
       expect(mimes[0].subtype, equals("wibble"));
     });
     
-    test("split another simple one", () {
+    test("another simple one", () {
       var mimes = parse(mime2);
       expect(mimes, isList);
       expect(mimes, hasLength(1));
@@ -48,7 +48,7 @@ main() {
       expect(mimes[0].subtype, equals("a"));
     });
     
-    test("split with params", () {
+    test("params", () {
       var mimes = parse(mime3);
       expect(mimes, isList);
       expect(mimes, hasLength(1));
@@ -58,7 +58,7 @@ main() {
       expect(mimes[0].params["xyz"], equals("efg"));
     });
     
-    test("split with quotes", () {
+    test("quotes", () {
       var mimes = parse(mime4);
       expect(mimes, isList);
       expect(mimes, hasLength(1));
@@ -69,7 +69,7 @@ main() {
       expect(mimes[0].params["y"], equals("1"));
     });
 
-    test("split params and spaces", () {
+    test("params and spaces", () {
       var mimes = parse(mime5);
       expect(mimes, isList);
       expect(mimes, hasLength(1));
@@ -79,7 +79,7 @@ main() {
       expect(mimes[0].params["xyz"], equals("0.2"));
     });
 
-    test("split two params and spaces", () {
+    test("two params and spaces", () {
       var mimes = parse(mime6);
       expect(mimes, isList);
       expect(mimes, hasLength(1));
@@ -90,7 +90,7 @@ main() {
       expect(mimes[0].params["b"], equals("2"));
     });
 
-    test("split two params", () {
+    test("two params", () {
       var mimes = parse(mime7);
       expect(mimes, isList);
       expect(mimes, hasLength(1));
@@ -101,7 +101,7 @@ main() {
       expect(mimes[0].params["b"], equals("2"));
     });
 
-    test("split multi", () {
+    test("multi", () {
       var mimes = parse(mime8);
       expect(mimes, isList);
       expect(mimes, hasLength(4));
@@ -115,7 +115,7 @@ main() {
       expect(mimes[3].subtype, equals("h"));
     });
 
-    test("split malformed", () {
+    test("malformed", () {
       var mimes = parse(mime9);
       expect(mimes, isList);
       expect(mimes, hasLength(1));
@@ -123,7 +123,7 @@ main() {
       expect(mimes[0].subtype, equals("*"));
     });
 
-    test("split malformed", () {
+    test("malformed", () {
       var mimes = parse(mime16);
       expect(mimes, isList);
       expect(mimes, hasLength(1));
@@ -131,8 +131,10 @@ main() {
       expect(mimes[0].subtype, equals("b"));
       expect(mimes[0].params["q"], equals('"x=y"'));
     });
-
-    test("mid q", () {
+  });
+  
+  group("q value is", () {
+    test("0.5", () {
       var mimes = parse(mime10);
       updateQValues(mimes);
       expect(mimes, isList);
@@ -143,7 +145,7 @@ main() {
       expect(mimes[0].params["q"], equals(0.5));
     });
 
-    test("zero q", () {
+    test("zero", () {
       var mimes = parse(mime11);
       updateQValues(mimes);
       expect(mimes, isList);
@@ -154,7 +156,7 @@ main() {
       expect(mimes[0].params["q"], equals(0.0));
     });
 
-    test("one q", () {
+    test("one", () {
       var mimes = parse(mime12);
       updateQValues(mimes);
       expect(mimes, isList);
@@ -165,7 +167,7 @@ main() {
       expect(mimes[0].params["q"], equals(1.0));
     });
 
-    test("too big q", () {
+    test("too big", () {
       var mimes = parse(mime13);
       updateQValues(mimes);
       expect(mimes, isList);
@@ -176,7 +178,7 @@ main() {
       expect(mimes[0].params["q"], equals(1.0));
     });
 
-    test("too loq q", () {
+    test("too low", () {
       var mimes = parse(mime14);
       updateQValues(mimes);
       expect(mimes, isList);
@@ -187,7 +189,7 @@ main() {
       expect(mimes[0].params["q"], equals(1.0));
     });
 
-    test("invalid q", () {
+    test("invalid", () {
       var mimes = parse(mime15);
       updateQValues(mimes);
       expect(mimes, isList);
@@ -197,29 +199,31 @@ main() {
       expect(mimes[0].params, hasLength(1));
       expect(mimes[0].params["q"], equals(1.0));
     });
-    
-    test("find semicolons", () {
+  });
+  
+  group("find positions of", () {
+    test("semicolons", () {
       var positions = _findPositions(mime4);
       expect(positions.semicolons, equals([[7, 13]]));
     });
     
-    test("find commas and semicolons", () {
+    test("commas and semicolons", () {
       var positions = _findPositions(mime42);
       expect(positions.commas, equals([]));
     });
     
-    test("find commas and semicolons", () {
+    test("commas and semicolons", () {
       var positions = _findPositions(mime43);
       expect(positions.commas, equals([9]));
     });
     
-    test("find commas and semicolons", () {
+    test("commas and semicolons", () {
       var positions = _findPositions(mime44);
       expect(positions.commas, equals([9]));
       expect(positions.semicolons, equals([[3], [3]]));
     });
 
-    test("find commas and semicolons", () {
+    test("commas and semicolons", () {
       var positions = _findPositions(mime41);
       expect(positions.commas, equals([]));
       expect(positions.semicolons, equals([[7, 15]]));
