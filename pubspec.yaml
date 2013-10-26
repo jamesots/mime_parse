@@ -1,0 +1,7 @@
+name: mime_parse
+version: 0.0.1
+author: James Ots <code@jamesots.com>
+description: A sample command-line application
+homepage: https://github.com/jamesots/mime_parse
+dependencies:
+  unittest: any
